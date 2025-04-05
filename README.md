@@ -42,6 +42,59 @@ python latent_vector_optimization.py --network=fashion_model.pkl --target=./targ
 python mixed_precision_optimization.py --dataset-path=./datasets/automotive --mixed-precision-mode=aggressive --outdir=./results
 ```
 
+## Automated Sequential Workflow
+
+A Bash script is provided to run all four workloads sequentially with automatic S3 uploading of results:
+
+```bash
+./stylegan-script.sh
+```
+
+This script:
+1. Runs basic training and inference
+2. Uses the basic model for fine-tuning
+3. Performs latent vector optimization
+4. Runs mixed precision training
+5. Uploads all logs, models, and results to S3 after each workflow completes
+
+## Continuous Operation Setup
+
+For running StyleGAN2 workflows continuously with monitoring:
+
+```bash
+# Install as a system service
+sudo ./install.sh
+
+# Start continuous operation manually
+./continuous-stylegan.sh
+```
+
+The continuous operation:
+- Runs complete StyleGAN2 workflow cycles indefinitely
+- Automatically uploads results to S3 after each cycle
+- Integrates with Docker monitoring stack
+- Provides monitoring via Prometheus and Grafana
+
+## Docker Monitoring Integration
+
+The included Docker Compose setup provides real-time monitoring of all StyleGAN2 workflows:
+
+```bash
+# Start monitoring stack
+docker-compose up -d
+
+# Run StyleGAN2 with monitoring 
+./run-docker-stylegan.sh
+```
+
+The monitoring stack includes:
+- Prometheus for metrics collection
+- Grafana for visualization
+- NVIDIA DCGM exporter for GPU metrics
+- Node exporter for system metrics
+- CloudWatch exporter for AWS metrics
+- Thanos for long-term storage of metrics
+
 ## Dataset Structure
 
 All scripts support swapping datasets without modifying code. Datasets should follow this structure:
@@ -69,6 +122,22 @@ For conditional generation, include a `dataset.json` file:
   ]
 }
 ```
+
+## S3 Integration
+
+All scripts support automatic uploading of logs, models, and generated images to AWS S3:
+
+```bash
+# Configure AWS credentials
+export AWS_ACCESS_KEY_ID=your_access_key_id
+export AWS_SECRET_ACCESS_KEY=your_secret_access_key
+export AWS_DEFAULT_REGION=us-east-1
+```
+
+S3 data is organized by:
+- Date and timestamp
+- Workflow type (basic_training, finetuned, etc.)
+- Data type (logs, models, images)
 
 ## Industry-Specific Usage
 
@@ -111,6 +180,20 @@ python inference_workload.py --network=fashion_model.pkl --seeds=100-150 --outdi
 python latent_vector_optimization.py --network=fashion_model.pkl --target=./targets/fashion --outdir=./results --latent-space=w+
 ```
 
+## Fashion-MNIST Example
+
+A complete example workflow using Fashion-MNIST is included:
+
+```bash
+# Prepare Fashion-MNIST dataset
+python prepare_fashion_mnist.py --output-dir=./datasets/fashion-mnist --image-size=64
+
+# Run the complete sequential workflow
+./stylegan-script.sh
+```
+
+This will run all four workloads on the Fashion-MNIST dataset and generate an HTML gallery with comparison visualizations.
+
 ## Configuration Files
 
 All scripts support YAML or JSON configuration files for easier management:
@@ -139,10 +222,27 @@ aug: ada
 - PyTorch (>= 1.7.0)
 - Python (>= 3.6)
 - CUDA (>= 11.0)
+- Docker and Docker Compose (for monitoring)
+- AWS CLI (for S3 uploads)
 - Additional requirements match the base StyleGAN2-ADA repository
+
+## Monitoring Dashboard
+
+Access the monitoring dashboard at http://localhost:3000 with:
+- Username: admin
+- Password: admin
+
+The dashboard provides real-time metrics on:
+- GPU utilization
+- Memory usage
+- Training progress
+- Model generation metrics
+- System resource utilization
 
 ## Notes
 
 - For multi-GPU training, ensure CUDA is properly configured
 - Mixed precision training works best on NVIDIA GPUs with Tensor Cores (Volta, Turing, or Ampere architectures)
 - When using the latent vector optimization, LPIPS dependencies will be installed if not present
+- For continuous operation, ensure sufficient disk space for logs and models
+- All S3 uploads include instance metadata for tracking computational resources
