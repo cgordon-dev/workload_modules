@@ -1,0 +1,49 @@
+[2025-04-05 03:52:05] Starting continuous StyleGAN2 operation
+[2025-04-05 03:52:05] Docker daemon is not running. Attempting to start...
+[2025-04-05 03:52:10] Failed to start Docker daemon. Exiting.
+[2025-04-05 03:52:10] Docker not available. Waiting 30 minutes before retry...
+[2025-04-05 04:12:09] Starting continuous StyleGAN2 operation
+[2025-04-05 04:12:09] Checking Docker Compose monitoring stack
+[2025-04-05 04:12:09] Docker Compose file not found at /home/ubuntu/workload_modules/docker-compose.yaml
+[2025-04-05 04:12:09] Failed to start monitoring stack. Waiting 15 minutes before retry...
+[2025-04-05 04:17:29] Starting continuous StyleGAN2 operation
+[2025-04-05 04:17:29] Checking Docker Compose monitoring stack
+[2025-04-05 04:17:29] Starting monitoring stack
+[2025-04-05 04:17:40] Monitoring stack started successfully
+[2025-04-05 04:17:40] Cleaning up old data
+[2025-04-05 04:17:40] Starting StyleGAN2 run #1
+[2025-04-05 04:17:40] Starting StyleGAN2 workflow cycle (Run ID: 1)
+[2025-04-05 04:17:40] StyleGAN2 workflow failed with exit code 127
+[2025-04-05 04:17:40] Found upload marker for run 1 (status: failed)
+[2025-04-05 04:17:40] Uploading run 1 data to S3 (status: failed)
+[2025-04-05 04:17:40] Failed to upload metadata
+[2025-04-05 04:17:40] Uploading log files
+[2025-04-05 04:17:40] Failed to upload log file: /home/ubuntu/workload_modules/logs/monitoring.log
+[2025-04-05 04:17:40] Failed to upload log file: /home/ubuntu/workload_modules/logs/service-error.log
+[2025-04-05 04:17:40] Failed to upload log file: /home/ubuntu/workload_modules/logs/service.log
+[2025-04-05 04:17:40] Failed to upload log file: /home/ubuntu/workload_modules/logs/stylegan_run_1.log
+[2025-04-05 04:17:40] Uploading model files
+[2025-04-05 04:17:40] Uploading sample images
+[2025-04-05 04:17:40] S3 upload for run 1 completed
+[2025-04-05 04:17:40] Waiting 1 hour before starting the next cycle
+[2025-04-05 04:22:06] Starting continuous StyleGAN2 operation
+[2025-04-05 04:22:06] Checking Docker Compose monitoring stack
+[2025-04-05 04:22:06] Starting monitoring stack
+[2025-04-05 04:22:17] Monitoring stack started successfully
+[2025-04-05 04:22:17] Cleaning up old data
+[2025-04-05 04:22:17] Starting StyleGAN2 run #2
+[2025-04-05 04:22:17] Starting StyleGAN2 workflow cycle (Run ID: 2)
+[2025-04-05 04:22:17] StyleGAN2 workflow failed with exit code 127
+[2025-04-05 04:22:17] Found upload marker for run 2 (status: failed)
+[2025-04-05 04:22:17] Uploading run 2 data to S3 (status: failed)
+[2025-04-05 04:22:17] Failed to upload metadata
+[2025-04-05 04:22:17] Uploading log files
+[2025-04-05 04:22:17] Failed to upload log file: /home/ubuntu/workload_modules/logs/monitoring.log
+[2025-04-05 04:22:17] Failed to upload log file: /home/ubuntu/workload_modules/logs/service-error.log
+[2025-04-05 04:22:17] Failed to upload log file: /home/ubuntu/workload_modules/logs/service.log
+[2025-04-05 04:22:17] Failed to upload log file: /home/ubuntu/workload_modules/logs/stylegan_run_1.log
+[2025-04-05 04:22:17] Failed to upload log file: /home/ubuntu/workload_modules/logs/stylegan_run_2.log
+[2025-04-05 04:22:17] Uploading model files
+[2025-04-05 04:22:17] Uploading sample images
+[2025-04-05 04:22:17] S3 upload for run 2 completed
+[2025-04-05 04:22:17] Waiting 1 hour before starting the next cycle

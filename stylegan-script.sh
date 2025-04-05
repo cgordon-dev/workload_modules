@@ -1,0 +1,1 @@
+run_stylegan2.sh

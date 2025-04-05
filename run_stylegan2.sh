@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Create necessary directories
 mkdir -p ./models ./data ./samples ./output ./logs
 
@@ -9,6 +8,7 @@ echo "Training started at: $(date)"
 
 # Run training script
 python3 training_workload.py
+TRAIN_EXIT_CODE=$?
 
 # Log end time of training
 TRAIN_END=$(date +%s)
@@ -16,12 +16,21 @@ TRAIN_DURATION=$((TRAIN_END - TRAIN_START))
 echo "Training completed at: $(date)"
 echo "Training duration: $TRAIN_DURATION seconds"
 
-# Check if training was successful by looking for final model
-if [ ! -f "./models/final_model.pth" ]; then
-    echo "Error: Training did not produce a final model file."
-    echo "Check training logs for errors."
+# Check if training failed
+if [ $TRAIN_EXIT_CODE -ne 0 ]; then
+    echo "Error: Training failed with exit code $TRAIN_EXIT_CODE"
+    exit $TRAIN_EXIT_CODE
+fi
+
+# Find the latest model file
+LATEST_MODEL=$(find ./output -name "*.pkl" -type f -printf "%T@ %p\n" | sort -n | tail -1 | cut -d' ' -f2-)
+
+if [ -z "$LATEST_MODEL" ]; then
+    echo "Error: No model file found. Training may not have completed successfully."
     exit 1
 fi
+
+echo "Found model file: $LATEST_MODEL"
 
 # Log start time of inference and evaluation
 INFER_START=$(date +%s)
@@ -29,13 +38,7 @@ echo "Inference and evaluation started at: $(date)"
 
 # Run inference script with various options
 echo "Generating samples..."
-python3 dcgan_inference.py --checkpoint ./models/final_model.pth --num_samples 64 --output_dir ./output
-
-echo "Generating latent space interpolation..."
-python3 dcgan_inference.py --checkpoint ./models/final_model.pth --interpolate --output_dir ./output
-
-echo "Evaluating model..."
-python3 dcgan_inference.py --checkpoint ./models/final_model.pth --evaluate --output_dir ./output
+python3 inference_workload.py --network="$LATEST_MODEL" --seeds=0-63 --outdir=./output/generated_images
 
 # Log end time of inference
 INFER_END=$(date +%s)
@@ -45,18 +48,13 @@ echo "Inference and evaluation duration: $INFER_DURATION seconds"
 
 # Summary
 echo "----------------------------------------"
-echo "DCGAN Training and Evaluation Summary:"
+echo "StyleGAN2-ADA Training and Evaluation Summary:"
 echo "----------------------------------------"
 echo "Training duration: $TRAIN_DURATION seconds"
 echo "Inference duration: $INFER_DURATION seconds"
 echo "Total execution time: $((TRAIN_DURATION + INFER_DURATION)) seconds"
 echo "All outputs saved to: ./output"
-echo "Model checkpoints saved to: ./models"
+echo "Model file: $LATEST_MODEL"
 echo "----------------------------------------"
 
-# Check if any FID results were generated
-if [ -f "./output/evaluation_results.txt" ]; then
-    echo "Evaluation Results:"
-    cat ./output/evaluation_results.txt
-    echo "----------------------------------------"
-fi
+exit 0
