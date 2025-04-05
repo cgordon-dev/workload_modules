@@ -1,0 +1,22 @@
+[Unit]
+Description=Continuous StyleGAN2 Training with Automatic S3 Uploads
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/stylegan2-project
+ExecStart=/home/ubuntu/stylegan2-project/continuous-stylegan.sh
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/ubuntu/stylegan2-project/logs/service.log
+StandardError=append:/home/ubuntu/stylegan2-project/logs/service-error.log
+# Set environment variables for AWS credentials
+Environment="AWS_ACCESS_KEY_ID=your_access_key_id"
+Environment="AWS_SECRET_ACCESS_KEY=your_secret_access_key"
+Environment="AWS_DEFAULT_REGION=us-east-1"
+
+[Install]
+WantedBy=multi-user.target

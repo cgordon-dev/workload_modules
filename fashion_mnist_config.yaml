@@ -1,0 +1,64 @@
+# Fashion-MNIST configuration for StyleGAN2-ADA workloads
+
+# Dataset configuration
+dataset:
+  # Path will be set at runtime
+  path: ./datasets/fashion-mnist
+  # Fashion-MNIST is 28x28, but we'll upsample to 64x64 for better results
+  image_size: 64
+  # No labels for basic training
+  use_labels: false
+  # Mirror images for data augmentation
+  mirror: true
+  # Use all images in the dataset
+  max_size: null
+
+# General training options
+# Number of GPUs (will be overridden per instance type)
+gpus: 1
+# Snapshot interval in training ticks
+snap: 50
+# Random seed
+seed: 0
+# Metrics to evaluate during training
+metrics: ['fid50k_full', 'kid50k_full']
+
+# Base configuration preset
+cfg: 'auto'
+# Training duration (will be reduced for tests)
+kimg: 5000
+# Batch size will be set per instance type
+
+# Augmentation options
+aug: 'ada'
+target: 0.6
+augpipe: 'bgc'
+
+# Transfer learning options
+# No resume for fresh training
+resume: 'noresume'
+freezed: 0
+
+# Performance options (will be adjusted per GPU type)
+fp32: false
+nhwc: true
+nobench: false
+allow_tf32: true
+workers: 3
+
+# Mixed precision specific options
+# Will be overridden per instance type
+mixed_precision_mode: 'default'
+
+# Industry-specific configurations
+industry: 'fashion'
+
+# Inference options
+truncation_psi: 0.7
+noise_mode: 'const'
+
+# Latent vector optimization options
+num_steps: 500
+latent_space: 'w+'
+perceptual_loss: 'lpips'
+initial_lr: 0.1

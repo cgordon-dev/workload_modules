@@ -1,0 +1,124 @@
+# Example configuration file for StyleGAN2-ADA workload modules
+
+# Dataset configuration
+dataset:
+  # Path to dataset (required)
+  path: ./datasets/example
+  # Image resolution (optional, will be detected from dataset if not specified)
+  image_size: 256
+  # Whether to use labels from dataset.json (default: true)
+  use_labels: true
+  # Whether to mirror images horizontally for data augmentation (default: false)
+  mirror: true
+  # Maximum number of images to use (optional)
+  max_size: null
+
+# General training options
+# Number of GPUs to use (default: 1)
+gpus: 1
+# Snapshot interval in training ticks (default: 50)
+snap: 50
+# Random seed (default: 0)
+seed: 0
+# Metrics to evaluate during training (default: ['fid50k_full'])
+metrics: ['fid50k_full', 'kid50k_full']
+
+# Base configuration preset (default: 'auto')
+# Options: 'auto', 'stylegan2', 'paper256', 'paper512', 'paper1024', 'cifar'
+cfg: 'auto'
+# Override training duration in thousands of images (default depends on cfg)
+kimg: 10000
+# Override batch size (default depends on cfg)
+# batch: 32
+# Override R1 gamma regularization (default depends on cfg)
+# gamma: 10
+
+# Augmentation options
+# Augmentation mode (default: 'ada')
+# Options: 'ada', 'noaug', 'fixed'
+aug: 'ada'
+# ADA target for --aug=ada (default: 0.6)
+target: 0.6
+# Augmentation probability for --aug=fixed
+# p: 0.5
+# Augmentation pipeline (default: 'bgc')
+# Options: 'blit', 'geom', 'color', 'filter', 'noise', 'cutout', 'bg', 'bgc', 'bgcf', 'bgcfn', 'bgcfnc'
+augpipe: 'bgc'
+
+# Transfer learning options
+# Resume training from given network pickle (default: 'noresume')
+# Options: 'noresume', 'ffhq256', 'ffhq512', 'ffhq1024', 'celebahq256', 'lsundog256', or path to custom .pkl
+# resume: 'ffhq256'
+# Number of layers to freeze in discriminator (default: 0)
+# freezed: 0
+
+# Performance options
+# Disable mixed-precision training (default: false)
+fp32: false
+# Use NHWC memory format with FP16 (default: false)
+nhwc: true
+# Disable cuDNN benchmarking (default: false)
+nobench: false
+# Allow PyTorch to use TF32 internally (default: false)
+allow_tf32: true
+# Override number of DataLoader workers (default: 3)
+workers: 3
+
+# Mixed precision specific options (for mixed_precision_optimization.py)
+# Mixed precision mode (default: 'default')
+# Options: 'default', 'aggressive', 'conservative', 'none'
+mixed_precision_mode: 'default'
+
+# Optimization-specific options (for fine_tuning_optimization.py)
+# Learning rate override (default: depends on cfg)
+# lr: 0.001
+
+# Industry-specific configurations (for industry organization)
+# Industry name for organization (optional)
+industry: 'example'
+
+# Inference options (for inference_workload.py)
+# Seeds for generation (default: none)
+# seeds: '0-10'
+# Truncation psi (default: 1.0)
+# truncation_psi: 0.7
+# Noise mode (default: 'const')
+# noise_mode: 'const'
+
+# Latent vector optimization options (for latent_vector_optimization.py)
+# Target image or directory (required for latent_vector_optimization.py)
+# target: './targets/example'
+# Number of optimization steps (default: 1000)
+# num_steps: 1000
+# Latent space to optimize in (default: 'w+')
+# Options: 'z', 'w', 'w+'
+# latent_space: 'w+'
+# Perceptual loss type (default: 'lpips')
+# Options: 'lpips', 'none'
+# perceptual_loss: 'lpips'
+# Initial learning rate (default: 0.1)
+# initial_lr: 0.1
+
+# Multi-industry configuration (optional)
+# Used when processing multiple industries in one run
+industries:
+  automotive:
+    dataset_path: './datasets/automotive'
+    target_path: './targets/automotive'
+    image_size: 512
+    mixed_precision_mode: 'aggressive'
+    latent_space: 'w+'
+    
+  medical:
+    dataset_path: './datasets/medical'
+    target_path: './targets/medical'
+    image_size: 256
+    mixed_precision_mode: 'conservative'
+    latent_space: 'w+'
+    
+  fashion:
+    dataset_path: './datasets/fashion'
+    target_path: './targets/fashion'
+    image_size: 1024
+    mixed_precision_mode: 'default'
+    latent_space: 'w+'
